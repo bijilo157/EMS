@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeTown EMS System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+        .glass { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .bg-animate { 
+            background: linear-gradient(-45deg, #7d93f1, #d3acec, #3069e2, #ff77ff); 
+            background-size: 400% 400%; 
+            animation: gradient 15s ease infinite; 
+        }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        /* [Navigation - ตัวหนังสือดำ + โปร่งใส] */
+        .nav-container { background: transparent; display: flex; gap: 0.8rem; justify-content: center; padding: 10px; flex-wrap: wrap; }
+        .nav-btn { 
+            padding: 10px 20px; 
+            border-radius: 14px; 
+            font-weight: 900; 
+            font-size: 15px; 
+            transition: all 0.3s; 
+            color: #000000; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            cursor: pointer; 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(4px); 
+        }
+        .nav-btn.active { 
+            background: rgba(255, 255, 255, 0.9); 
+            color: #000000; 
+            border-color: rgba(255, 255, 255, 1);
+        }
+
+        .welfare-card { background: rgba(255, 255, 255, 0.95); border-radius: 2rem; padding: 1.5rem; color: black; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 2px solid transparent; transition: all 0.3s; position: relative; }
+        .item-box { background: #f8f9fa; border: 2px dashed #ff99cc; border-radius: 1rem; padding: 0.5rem; text-align: center; position: relative; transition: all 0.3s; }
+        .item-pending { opacity: 0.5; filter: grayscale(1); border-color: #cbd5e1; }
+        .status-badge { position: absolute; top: -5px; right: -5px; font-size: 9px; padding: 2px 6px; border-radius: 99px; font-weight: bold; color: white; z-index: 10; }
+    </style>
+</head>
+<body class="bg-animate min-h-screen text-white p-4 md:p-10">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="text-center mb-6">
+            <h1 class="text-5xl font-black italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-pink-200 to-blue-200 uppercase">TIME TOWN EMS</h1>
+            <p class="text-xs tracking-[0.5em] text-cyan-300 opacity-80 mt-2 uppercase font-bold">Emergency Medical Services</p>
+        </header>
+
+        <nav class="flex justify-center mb-10">
+            <div class="nav-container">
+                <button onclick="showPage('dir')" id="btn-dir" class="nav-btn">ทำเนียบหมอ</button>
+                <button onclick="showPage('rules')" id="btn-rules" class="nav-btn">กฎเมือง/หมอ</button>
+                <button onclick="showPage('apply')" id="btn-apply" class="nav-btn">รับสมัคร</button>
+                <button onclick="showPage('welfare')" id="btn-welfare" class="nav-btn">รับสวัสดิการ</button>
+                <button onclick="showPage('logs')" id="btn-logs" class="nav-btn">ประวัติเข้า-ออก</button>
+            </div>
+        </nav>
+
+        <div id="dir-page" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 transition-all">
+            <script>
+                const doctors = [
+                    { name: "High StepDaraRak", rank: "[H-EMS]", pos: "ผู้อำนวยการแพทย์", color: "pink", icon:"H" },
+                    { name: "Jaokha Dai", rank: "[H-EMS]", pos: "ผู้อำนวยการแพทย์", color: "pink", icon:"J", imgUrl: "https://i.postimg.cc/yN0nsJNw/ce-akha.png" },
+                    { name: "Cookie Tangjairak", rank: "[H-EMS]", pos: "ผู้อำนวยการแพทย์", color: "pink", icon:"C", imgUrl: "https://i.postimg.cc/g0p8ygz9/k.png" },
+                    { name: "Taichi Wyrmblood", rank: "[S-EMS]", pos: "เลขาผู้อำนวยการ", color: "blue", icon:"T" },
+                    { name: "Sasha Blackwell", rank: "[EMS]", pos: "แพทย์ชำนาญการ", color: "cyan", icon:"S", imgUrl: "https://i.postimg.cc/wv1psPVR/sasa.png" },
+                    { name: "MooYor", rank: "[EMS]", pos: "แพทย์ชำนาญการ", color: "cyan", icon:"M" },
+                    { name: "June July", rank: "[EMS]", pos: "หัวหน้าแพทย์", color: "green", icon:"J" },
+                    { name: "Akira Yamada", rank: "[EMS]", pos: "หัวหน้าแพทย์", color: "green", icon:"A" },
+                    { name: "Davil", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"D" },
+                    { name: "Medea", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"M" },
+                    { name: "pony", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"P" },
+                    { name: "Zenz Hightway", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"Z" }
+                ];
+                document.write(doctors.map(doc => `
+                    <div class="bg-white bg-opacity-90 p-4 rounded-[2.5rem] flex flex-col items-center shadow-lg border border-gray-200 text-center">
+                        ${doc.imgUrl ? 
+                            `<img src="${doc.imgUrl}" class="w-full aspect-[3/4] rounded-[2rem] object-cover mb-4 shadow-md border-4 border-white">` : 
+                            `<div class="w-full aspect-[3/4] rounded-[2rem] bg-gradient-to-br from-${doc.color}-500 to-gray-800 mb-4 flex items-center justify-center font-black text-6xl text-white shadow-inner">${doc.icon}</div>`
+                        }
+                        <div class="text-black">
+                            <span class="text-xs font-black text-gray-700 uppercase tracking-widest">${doc.rank}</span>
+                            <h3 class="text-xl font-black leading-tight text-gray-950 mt-1 uppercase italic">${doc.name}</h3>
+                            <p class="text-sm text-gray-600 font-bold mt-1">${doc.pos}</p>
+                        </div>
+                    </div>
+                `).join(''));
+            </script>
+        </div>
+
+        <div id="rules-page" class="hidden space-y-6">
+            <div class="glass p-8 rounded-[3rem] text-black bg-white bg-opacity-95 shadow-2xl">
+                <h2 class="text-3xl font-black mb-4 text-red-600 italic uppercase">📢 ประกาศจากโรงพยาบาล Time Town</h2>
+                <div class="p-6 bg-red-50 border-l-8 border-red-500 rounded-xl mb-6">
+                    <p class="font-bold text-xl text-red-700">ขณะนี้โรงพยาบาลได้มีการปิดให้บริการชั่วคราว ณ เวลา 22:45 น. เป็นต้นไป</p>
+                    <p class="text-sm text-gray-600 mt-2 italic">*ปรับเปลี่ยนโครงสร้างหน่วยงาน ขออภัยในความไม่สะดวก*</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <a href="https://sites.google.com/view/timetownrules/" target="_blank" class="block p-6 bg-blue-600 rounded-2xl text-white hover:scale-105 transition-transform shadow-lg">
+                        <h3 class="text-xl font-black italic uppercase">📜 กฏประเทศ TimeTown</h3>
+                    </a>
+                    <a href="https://sites.google.com/view/rule-medical-time-town/" target="_blank" class="block p-6 bg-pink-600 rounded-2xl text-white hover:scale-105 transition-transform shadow-lg">
+                        <h3 class="text-xl font-black italic uppercase">⚕️ กฏหน่วยงานแพทย์</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="apply-page" class="hidden grid md:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-[3rem]">
+                <h2 class="text-3xl font-black mb-6 text-yellow-400 italic underline uppercase">สวัสดิการ</h2>
+                <div class="space-y-1 text-sm font-semibold mb-8 text-black bg-white bg-opacity-70 p-5 rounded-2xl shadow-inner">
+                    <p>• รับ PAYCHECK ทุกๆ 1 ชั่วโมง</p>
+                    <p>• โบนัส Peak Time เช้า, บ่าย, เย็น, พีคทาม</p>
+                    <p>• โบนัสล่วงเวลา</p>
+                    <p>• โบนัสสตอรี่</p>
+                    <p>• โบนัสความขยัน</p>
+                    <p>• โบนัสรายอาทิตย์</p>
+
+                </div>
+
+                <h2 class="text-2xl font-black mb-4 text-pink-300 italic underline uppercase">คุณสมบัติ</h2>
+                <div class="space-y-1 text-sm font-semibold opacity-90 text-black bg-white bg-opacity-70 p-5 rounded-2xl shadow-inner">
+
+                    <p>• อายุ 16 ปีขึ้นไป</p>
+                    <p>• สามารถเข้าเวรขั้นต่ำ 3 ชม. ต่อวัน</p>
+                    <p>• สามารถทำงานร่วมกับผู้อื่นได้</p>
+                    <p>• อุปกรณ์สื่อสารใช้งานได้ดี</p>
+                    <p>• สอบถามเพิ่มเติมได้ที่หน้าโรงพยายาล</p>
+                </div>
+            </div>
+
+            <div class="glass p-8 rounded-[3rem] text-black bg-white bg-opacity-95 shadow-2xl">
+                <div class="flex justify-between items-center mb-4 uppercase">
+                    <div>
+                        <h2 class="text-2xl font-black text-gray-950 italic uppercase">Registration</h2>
+                        <p class="text-[14px] font-bold text-blue-600">ติดต่อ : highstepdararak</p>
+                    </div>
+                    <button id="copy-btn" onclick="fastCopy()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-xs uppercase shadow-lg text-white transition-all active:scale-95">Copy To Discord</button>
+                </div>
+                <textarea id="apply-text" spellcheck="false" class="w-full rounded-2xl p-6 text-sm h-64 focus:ring-4 focus:ring-blue-500 shadow-inner border border-gray-300 font-medium bg-white">ชื่อภายในเกมส์ : 
+อายุ OC : 
+อายุ IC : 
+มีประสบการณ์ในการทำงาน : 
+ช่วงเวลาในการทำงาน : 
+ภูมิหลังตัวละคร : </textarea>
+                <a href="https://forms.gle/85KCrvsUzrPAayff9" target="_blank" class="block w-full py-4 mt-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl text-center font-black text-white shadow-xl border-2 border-black">Submit Forms</a>
+            </div>
+        </div>
+
+        <div id="welfare-page" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="welfare-card border-gray-200 opacity-80"> <div class="flex justify-between items-start mb-4">
+        <h3 class="font-black text-lg italic uppercase text-gray-500">Cookie Tangjairak</h3>
+        <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
+    </div>
+    <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+        <span class="text-3xl mb-2">🚫</span>
+        <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
+   
+                    </div>
+                </div>
+          <div class="welfare-card border-blue-400"> <div class="flex justify-between items-start mb-4">
+        <h3 class="font-black text-lg italic uppercase text-gray-900">Zenz Hightway</h3>
+        <span class="bg-blue-100 text-blue-600 text-[10px] px-2 py-1 rounded-full font-bold">PENDING</span>
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="item-box item-pending">
+            <span class="status-badge bg-gray-500">⏳</span>
+            <img src="https://i.postimg.cc/mD8m8L6g/image-4d2878.png" class="h-16 w-full object-contain mb-1">
+            <p class="text-[10px] font-black uppercase">ไม้พลู</p>
+        </div>
+        <div class="item-box item-pending">
+            <span class="status-badge bg-gray-500">⏳</span>
+            <img src="https://i.postimg.cc/8z9L7D0m/image-4d3322.png" class="h-16 w-full object-contain mb-1">
+            <p class="text-[10px] font-black uppercase">ไม้พลู +3</p>
+        </div>
+    </div>
+    <p class="text-[10px] text-center mt-3 font-bold text-blue-500 italic">* อยู่ระหว่างการตรวจสอบผลงาน</p>
+</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="logs-page" class="hidden glass rounded-[2.5rem] overflow-hidden text-black">
+            <div class="p-6 bg-white bg-opacity-10 font-black text-white italic uppercase text-xl text-center">EMS Staff Records</div>
+            <div class="bg-white bg-opacity-95 overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="text-[12px] uppercase bg-gray-100 font-black italic">
+                        <tr>
+                            <th class="p-5">Officer Name</th>
+                            <th class="p-5 text-center text-green-600">Joined</th>
+                            <th class="p-5 text-center text-red-600">Resigned</th>
+                            <th class="p-5 text-right font-black italic tracking-widest">Remark</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 font-bold text-sm">
+                        <tr>
+                            <td class="p-5 text-gray-950">High StepDaraRak</td>
+                            <td class="p-5 text-center font-mono text-green-700">01/01/2026</td>
+                            <td class="p-5 text-center font-mono text-gray-400">ปัจจุบัน</td>
+                            <td class="p-5 text-right text-green-600 uppercase italic tracking-widest">ประจำการ</td>
+                        </tr>
+                         </thead>
+                    <tbody class="divide-y divide-gray-200 font-bold text-sm">
+                        <tr>
+    <td class="p-5 text-gray-950">JaoKha Dai</td>
+    <td class="p-5 text-center font-mono text-green-700">01/01/2026</td>
+    <td class="p-5 text-center font-mono text-red-600">30/03/2026</td>
+    <td class="p-5 text-right text-red-600 uppercase italic tracking-widest">ลาออก</td>
+</tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = () => showPage('dir');
+
+        function showPage(pageId) {
+            const pages = ['dir', 'rules', 'apply', 'welfare', 'logs'];
+            pages.forEach(p => {
+                const pg = document.getElementById(p + '-page');
+                const btn = document.getElementById('btn-' + p);
+                if (pg) pg.classList.add('hidden');
+                if (btn) btn.classList.remove('active');
+            });
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+            document.getElementById('btn-' + pageId).classList.add('active');
+        }
+
+        function fastCopy() {
+            const textarea = document.getElementById("apply-text");
+            const btn = document.getElementById("copy-btn");
+            textarea.select();
+            navigator.clipboard.writeText(textarea.value);
+            btn.innerText = "COPIED!";
+            btn.classList.replace('bg-blue-600', 'bg-green-600');
+            setTimeout(() => {
+                btn.innerText = "Copy To Discord";
+                btn.classList.replace('bg-green-600', 'bg-blue-600');
+            }, 1000);
+        }
+
+        const headers = ["ชื่อภายในเกมส์ :", "อายุ OC :", "อายุ IC :", "มีประสบการณ์ในการทำงาน :", "ช่วงเวลาในการทำงาน :", "ภูมิหลังตัวละคร :"];
+        document.getElementById("apply-text").onkeydown = function(e) {
+            const textarea = e.target;
+            const start = textarea.selectionStart;
+            headers.forEach(h => {
+                const idx = textarea.value.indexOf(h);
+                if (idx !== -1 && ((e.key === "Backspace" && start > idx && start <= idx + h.length) || (e.key === "Delete" && start >= idx && start < idx + h.length))) {
+                    e.preventDefault();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
