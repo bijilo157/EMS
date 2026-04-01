@@ -75,14 +75,24 @@
                     { name: "Medea", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"M" },
                     { name: "pony", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"P", status: "vacation" },
                     { name: "Zenz Hightway", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"Z" },
-                    { name: "Kira Winslow", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"K", imgUrl: "https://i.postimg.cc/W1qDZfht/kh-r-a.png" },
+                    { name: "Kira Winslow", rank: "[EMS]", pos: "แพทย์", color: "gray", icon:"K", imgUrl: "https://i.postimg.cc/W1qDZfht/kh-r-a.png" }
                 ];
+
                 document.write(doctors.map(doc => `
-                    <div class="bg-white bg-opacity-90 p-4 rounded-[2.5rem] flex flex-col items-center shadow-lg border border-gray-200 text-center">
-                        ${doc.imgUrl ? 
-                            `<img src="${doc.imgUrl}" class="w-full aspect-[3/4] rounded-[2rem] object-cover mb-4 shadow-md border-4 border-white">` : 
-                            `<div class="w-full aspect-[3/4] rounded-[2rem] bg-gradient-to-br from-${doc.color}-500 to-gray-800 mb-4 flex items-center justify-center font-black text-6xl text-white shadow-inner">${doc.icon}</div>`
-                        }
+                    <div class="bg-white bg-opacity-90 p-4 rounded-[2.5rem] flex flex-col items-center shadow-lg border border-gray-200 text-center relative overflow-hidden">
+                        <div class="relative w-full aspect-[3/4] mb-4">
+                            ${doc.imgUrl ? 
+                                `<img src="${doc.imgUrl}" class="w-full h-full rounded-[2rem] object-cover shadow-md border-4 border-white ${doc.status === 'vacation' ? 'grayscale-[0.5]' : ''}">` : 
+                                `<div class="w-full h-full rounded-[2rem] bg-gradient-to-br from-${doc.color}-500 to-gray-800 flex items-center justify-center font-black text-6xl text-white shadow-inner border-4 border-white">${doc.icon}</div>`
+                            }
+                            
+                            ${doc.status === 'vacation' ? `
+                                <div class="absolute inset-0 bg-black bg-opacity-70 rounded-[2rem] flex items-center justify-center border-4 border-white">
+                                    <span class="text-white text-4xl font-black italic uppercase tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">พักงาน</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
                         <div class="text-black">
                             <span class="text-xs font-black text-gray-700 uppercase tracking-widest">${doc.rank}</span>
                             <h3 class="text-xl font-black leading-tight text-gray-950 mt-1 uppercase italic">${doc.name}</h3>
@@ -121,12 +131,10 @@
                     <p>• โบนัสสตอรี่</p>
                     <p>• โบนัสความขยัน</p>
                     <p>• โบนัสรายอาทิตย์</p>
-
                 </div>
 
                 <h2 class="text-2xl font-black mb-4 text-pink-300 italic underline uppercase">คุณสมบัติ</h2>
                 <div class="space-y-1 text-sm font-semibold opacity-90 text-black bg-white bg-opacity-70 p-5 rounded-2xl shadow-inner">
-
                     <p>• อายุ 16 ปีขึ้นไป</p>
                     <p>• สามารถเข้าเวรขั้นต่ำ 3 ชม. ต่อวัน</p>
                     <p>• สามารถทำงานร่วมกับผู้อื่นได้</p>
@@ -155,75 +163,68 @@
 
         <div id="welfare-page" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="welfare-card border-gray-200 opacity-80"> <div class="flex justify-between items-start mb-4">
-        <h3 class="font-black text-lg italic uppercase text-gray-500">Cookie Tangjairak</h3>
-        <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
-    </div>
-    <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
-        <span class="text-3xl mb-2">🚫</span>
-        <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
-   
-                    </div>
-                </div>
-             <div class="welfare-card border-gray-200 opacity-80"> <div class="flex justify-between items-start mb-4">
-        <h3 class="font-black text-lg italic uppercase text-gray-500">High StepDaraRak</h3>
-        <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
-    </div>
-    <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
-        <span class="text-3xl mb-2">🚫</span>
-        <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
-   
-                    </div>
-                </div>
+                <h3 class="font-black text-lg italic uppercase text-gray-500">Cookie Tangjairak</h3>
+                <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                <span class="text-3xl mb-2">🚫</span>
+                <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
+            </div>
+            </div>
             <div class="welfare-card border-gray-200 opacity-80"> <div class="flex justify-between items-start mb-4">
-        <h3 class="font-black text-lg italic uppercase text-gray-500">Jaokha Dai</h3>
-        <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
-    </div>
-    <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
-        <span class="text-3xl mb-2">🚫</span>
-        <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
-   
-                    </div>
-                </div>
+                <h3 class="font-black text-lg italic uppercase text-gray-500">High StepDaraRak</h3>
+                <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                <span class="text-3xl mb-2">🚫</span>
+                <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
+            </div>
+            </div>
             <div class="welfare-card border-gray-200 opacity-80"> <div class="flex justify-between items-start mb-4">
-        <h3 class="font-black text-lg italic uppercase text-gray-500">Sasha Blackwell</h3>
-        <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
-    </div>
-    <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
-        <span class="text-3xl mb-2">🚫</span>
-        <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
-   
-                    </div>
-                </div>
+                <h3 class="font-black text-lg italic uppercase text-gray-500">Jaokha Dai</h3>
+                <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                <span class="text-3xl mb-2">🚫</span>
+                <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
+            </div>
+            </div>
             <div class="welfare-card border-gray-200 opacity-80"> <div class="flex justify-between items-start mb-4">
-        <h3 class="font-black text-lg italic uppercase text-gray-500">MooYor Mandeville</h3>
-        <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
-    </div>
-    <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
-        <span class="text-3xl mb-2">🚫</span>
-        <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
-   
-                    </div>
+                <h3 class="font-black text-lg italic uppercase text-gray-500">Sasha Blackwell</h3>
+                <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                <span class="text-3xl mb-2">🚫</span>
+                <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
+            </div>
+            </div>
+            <div class="welfare-card border-gray-200 opacity-80"> <div class="flex justify-between items-start mb-4">
+                <h3 class="font-black text-lg italic uppercase text-gray-500">MooYor Mandeville</h3>
+                <span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-full font-bold">DECLINED</span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                <span class="text-3xl mb-2">🚫</span>
+                <p class="text-xs font-black uppercase text-gray-400 tracking-widest">No Welfare Requested</p>
+            </div>
+            </div>
+            <div class="welfare-card border-blue-400"> <div class="flex justify-between items-start mb-4">
+                <h3 class="font-black text-lg italic uppercase text-gray-900">Kira Winslow</h3>
+                <span class="bg-blue-100 text-blue-600 text-[10px] px-2 py-1 rounded-full font-bold">PENDING</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="item-box item-pending">
+                    <span class="status-badge bg-gray-500">⏳</span>
+                    <img src="https://i.postimg.cc/mD8m8L6g/image-4d2878.png" class="h-16 w-full object-contain mb-1">
+                    <p class="text-[10px] font-black uppercase">ไม้พลู</p>
                 </div>
-          <div class="welfare-card border-blue-400"> <div class="flex justify-between items-start mb-4">
-        <h3 class="font-black text-lg italic uppercase text-gray-900">Kira Winslow</h3>
-        <span class="bg-blue-100 text-blue-600 text-[10px] px-2 py-1 rounded-full font-bold">PENDING</span>
-    </div>
-    <div class="grid grid-cols-2 gap-2">
-        <div class="item-box item-pending">
-            <span class="status-badge bg-gray-500">⏳</span>
-            <img src="https://i.postimg.cc/mD8m8L6g/image-4d2878.png" class="h-16 w-full object-contain mb-1">
-            <p class="text-[10px] font-black uppercase">ไม้พลู</p>
-        </div>
-        <div class="item-box item-pending">
-            <span class="status-badge bg-gray-500">⏳</span>
-            <img src="https://i.postimg.cc/8z9L7D0m/image-4d3322.png" class="h-16 w-full object-contain mb-1">
-            <p class="text-[10px] font-black uppercase">ไม้พลู +3</p>
-        </div>
-    </div>
-    <p class="text-[10px] text-center mt-3 font-bold text-blue-500 italic">* อยู่ระหว่างการตรวจสอบผลงาน</p>
-</div>
+                <div class="item-box item-pending">
+                    <span class="status-badge bg-gray-500">⏳</span>
+                    <img src="https://i.postimg.cc/8z9L7D0m/image-4d3322.png" class="h-16 w-full object-contain mb-1">
+                    <p class="text-[10px] font-black uppercase">ไม้พลู +3</p>
                 </div>
             </div>
+            <p class="text-[10px] text-center mt-3 font-bold text-blue-500 italic">* อยู่ระหว่างการตรวจสอบผลงาน</p>
+        </div>
         </div>
 
         <div id="logs-page" class="hidden glass rounded-[2.5rem] overflow-hidden text-black">
@@ -245,14 +246,12 @@
                             <td class="p-5 text-center font-mono text-gray-400">ปัจจุบัน</td>
                             <td class="p-5 text-right text-green-600 uppercase italic tracking-widest">ประจำการ</td>
                         </tr>
-                         </thead>
-                    <tbody class="divide-y divide-gray-200 font-bold text-sm">
                         <tr>
-    <td class="p-5 text-gray-950">JaoKha Dai</td>
-    <td class="p-5 text-center font-mono text-green-700">01/01/2026</td>
-    <td class="p-5 text-center font-mono text-red-600">30/03/2026</td>
-    <td class="p-5 text-right text-red-600 uppercase italic tracking-widest">ลาออก</td>
-</tr>
+                            <td class="p-5 text-gray-950">JaoKha Dai</td>
+                            <td class="p-5 text-center font-mono text-green-700">01/01/2026</td>
+                            <td class="p-5 text-center font-mono text-red-600">30/03/2026</td>
+                            <td class="p-5 text-right text-red-600 uppercase italic tracking-widest">ลาออก</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
