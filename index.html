@@ -80,20 +80,21 @@
                     { name: "SangWien NaUtthayan", rank: "[EMS]", pos: "นักเรียนแพทย์", color: "gray", icon:"S", imgUrl: "https://i.postimg.cc/vmHNXj6J/s-ngwe-yn.png" }  
                 ];
 
-                document.write(doctors.map(doc => `
-                    <div class="bg-white bg-opacity-90 p-4 rounded-[2.5rem] flex flex-col items-center shadow-lg border border-gray-200 text-center relative overflow-hidden">
-                        <div class="relative w-full aspect-[3/4] mb-4">
+               document.write(doctors.map(doc => `
+                    <div class="bg-white bg-opacity-90 p-4 rounded-[2.5rem] flex flex-col items-center shadow-lg border border-gray-200 text-center relative overflow-hidden h-full">
+                        <div class="relative w-full aspect-[3/4] mb-4 shrink-0 overflow-hidden rounded-[2rem]">
                             ${doc.imgUrl ? 
-                                `<img src="${doc.imgUrl}" class="w-full h-full rounded-[2rem] object-cover shadow-md border-4 border-white ${doc.status === 'vacation' ? 'grayscale-[0.5]' : ''}">` : 
-                                `<div class="w-full h-full rounded-[2rem] bg-gradient-to-br from-${doc.color}-500 to-gray-800 flex items-center justify-center font-black text-6xl text-white shadow-inner border-4 border-white">${doc.icon}</div>`
+                                `<img src="${doc.imgUrl}" class="w-full h-full object-cover shadow-md border-4 border-white ${doc.status === 'vacation' ? 'grayscale-[0.5]' : ''}">` : 
+                                `<div class="w-full h-full bg-gradient-to-br from-${doc.color}-500 to-gray-800 flex items-center justify-center font-black text-6xl text-white shadow-inner border-4 border-white">${doc.icon}</div>`
                             }
                             
                             ${doc.status === 'vacation' ? `
-                                <div class="absolute inset-0 bg-black bg-opacity-70 rounded-[2rem] flex items-center justify-center border-4 border-white">
+                                <div class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
                                     <span class="text-white text-4xl font-black italic uppercase tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">พักงาน</span>
                                 </div>
                             ` : ''}
                         </div>
+
 
                         <div class="text-black">
                             <span class="text-xs font-black text-gray-700 uppercase tracking-widest">${doc.rank}</span>
